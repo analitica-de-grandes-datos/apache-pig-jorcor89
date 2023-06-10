@@ -22,10 +22,7 @@ $ pig -x local -f pregunta.pig
         /* >>> Escriba su respuesta a partir de este punto <<< */
 */
 
-data = LOAD 'data.csv' USING PigStorage(',') AS (id: int, name: chararray, lastname: chararray, date: chararray, color: chararray, number: int);
-
-result = FILTER data BY (color matches 'b.*');
-result = FOREACH result GENERATE color;
-
-STORE result INTO 'output' USING PigStorage(',');
-DUMP result;
+datos = LOAD './data.csv' using PigStorage(',') AS (id:int, nombre:chararray, apellido:chararray, fecha:chararray, color:chararray, nivel:int);
+seleccion = FOREACH datos GENERATE color;
+salida =  FILTER seleccion BY color matches '[b].*';
+STORE salida INTO 'output/' using PigStorage(',');
