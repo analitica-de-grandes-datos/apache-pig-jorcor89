@@ -40,22 +40,55 @@ data = LOAD 'data.csv' USING PigStorage(',') AS (id: int, firstname: chararray, 
 
 result = FOREACH data GENERATE
     birthday,
+    SUBSTRING(birthday, 8, 10) AS dd,
+    REGEX_EXTRACT(SUBSTRING(birthday, 8, 10), '0*(\\d+)?', 1) as d,
+
     REPLACE(
         REPLACE(
             REPLACE(
                 REPLACE(
-                    LOWER (ToString( ToDate(birthday, 'yyyy-MM-dd'), 'MMM' )),
-                    'apr',
-                    'abr'),
-                'jan',
-                'ene'),
-            'aug',
-            'ago'),
-        'dec',
-        'dic'),
+                    REPLACE(
+                        REPLACE(
+                            REPLACE(
+                                LOWER (ToString( ToDate(birthday, 'yyyy-MM-dd'), 'EEE' )),
+                                'mon',
+                                'lun'),
+                            'tue',
+                            'mar'),
+                        'wed',
+                        'mie'),
+                    'thu',
+                    'jue'),
+                'fri',
+                'vie'),
+            'sat',
+            'sab'),
+        'sun',
+        'dom'),
 
-    SUBSTRING(birthday, 5, 7) AS mm,
-    REGEX_EXTRACT(SUBSTRING(birthday, 5, 7), '0*(\\d+)?', 1) as m;
+        REPLACE(
+        REPLACE(
+            REPLACE(
+                REPLACE(
+                    REPLACE(
+                        REPLACE(
+                            REPLACE(
+                                LOWER (ToString( ToDate(birthday, 'yyyy-MM-dd'), 'EEE' )),
+                                'mon',
+                                'lunes'),
+                            'tue',
+                            'martes'),
+                        'wed',
+                        'miercoles'),
+                    'thu',
+                    'jueves'),
+                'fri',
+                'viernes'),
+            'sat',
+            'sabado'),
+        'sun',
+        'domingo');
+
 
 STORE result INTO 'output' USING PigStorage(',');
 DUMP result;
